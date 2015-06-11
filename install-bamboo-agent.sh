@@ -1,6 +1,9 @@
 #!/bin/bash
-set -x
-set -e
+#set -x
+
+# Timeout for the agent start.
+# Increase the timeout if the script does not get to `Bamboo agent 'Elastic Agent on <ec2-instance-id>' ready to receive builds.`.
+AGENT_TIMEOUT="5m"
 
 echo "    [Bamboo Agent installation script]: Installing Java and other packages.."
 sudo apt-get update
@@ -42,7 +45,7 @@ sudo sed -i 's/exit 0/#exit 0/' /etc/rc.local
 echo -e "\n#Configure automatic startup of the Bamboo agent\n. /opt/bamboo-elastic-agent/etc/rc.local\n" | sudo tee -a /etc/rc.local
 
 echo "    [Bamboo Agent installation script]: Starting Bamboo Agent..."
-sudo su -c "timeout 120s /opt/bamboo-elastic-agent/bin/bamboo-elastic-agent" - bamboo
+sudo su -c "timeout $AGENT_TIMEOUT /opt/bamboo-elastic-agent/bin/bamboo-elastic-agent" - bamboo
 
 echo "    [Bamboo Agent installation script]: Finalizing ..."
 sudo cp /opt/bamboo-elastic-agent/etc/motd /etc/motd
