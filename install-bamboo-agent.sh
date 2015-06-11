@@ -42,7 +42,7 @@ sudo sed -i 's/exit 0/#exit 0/' /etc/rc.local
 echo -e "\n#Configure automatic startup of the Bamboo agent\n. /opt/bamboo-elastic-agent/etc/rc.local\n" | sudo tee -a /etc/rc.local
 
 echo "    [Bamboo Agent installation script]: Starting Bamboo Agent..."
-sudo su -c "timeout 5m /opt/bamboo-elastic-agent/bin/bamboo-elastic-agent" - bamboo
+sudo su -c "timeout 120s /opt/bamboo-elastic-agent/bin/bamboo-elastic-agent" - bamboo
 
 echo "    [Bamboo Agent installation script]: Finalizing ..."
 sudo cp /opt/bamboo-elastic-agent/etc/motd /etc/motd
