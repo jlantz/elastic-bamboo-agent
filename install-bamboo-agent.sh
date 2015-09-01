@@ -1,6 +1,9 @@
 #!/bin/bash
 #set -x
 
+# Export version variables.
+export DOCKER_COMPOSE_VERSION=1.4.0
+
 # Timeout for the agent start.
 # Increase the timeout if the script does not get to `Bamboo agent 'Elastic Agent on <ec2-instance-id>' ready to receive builds.`.
 AGENT_TIMEOUT="3m"
@@ -23,8 +26,8 @@ echo -e "\n\n\[Bamboo Agent installation script]: Installing other packages...\n
 sudo apt-get install -y mc unzip htop
 
 echo -e "\n\n[Bamboo Agent installation script]: Installing Docker, Docker Compose...\n\n"
-wget -qO- https://get.docker.com/ | sh
-curl -L https://github.com/docker/compose/releases/download/1.2.0/docker-compose-`uname -s`-`uname -m` | sudo dd of=/usr/local/bin/docker-compose
+curl -sSL https://get.docker.com/ | sh
+sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 sudo docker version
