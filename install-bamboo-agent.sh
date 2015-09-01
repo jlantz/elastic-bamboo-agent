@@ -39,7 +39,7 @@ sudo usermod -aG docker ubuntu
 sudo usermod -aG docker bamboo
 
 echo -e "\n\n[Bamboo Agent installation script]: Installing Bamboo Agent...\n\n"
-export imageVer=4.2
+export imageVer=4.5
 wget https://maven.atlassian.com/content/repositories/atlassian-public/com/atlassian/bamboo/atlassian-bamboo-elastic-image/${imageVer}/atlassian-bamboo-elastic-image-${imageVer}.zip
 sudo mkdir -p /opt/bamboo-elastic-agent
 sudo unzip -o atlassian-bamboo-elastic-image-${imageVer}.zip -d /opt/bamboo-elastic-agent
