@@ -1,8 +1,14 @@
 #!/bin/bash
 #set -x
 
-# Export version variables.
-export DOCKER_COMPOSE_VERSION=1.4.0
+# Get versions from env or use defaults
+if [ "$DOCKER_COMPOSE_VERSION" == "" ]; then
+    export DOCKER_COMPOSE_VERSION=1.6.1
+fi
+
+if [ "$BAMBOO_AGENT_VERSION" == "" ]; then
+    export BAMBOO_AGENT_VERSION=5.6
+fi
 
 # Timeout for the agent start.
 # Increase the timeout if the script does not get to `Bamboo agent 'Elastic Agent on <ec2-instance-id>' ready to receive builds.`.
@@ -39,10 +45,9 @@ sudo usermod -aG docker ubuntu
 sudo usermod -aG docker bamboo
 
 echo -e "\n\n[Bamboo Agent installation script]: Installing Bamboo Agent...\n\n"
-export imageVer=4.5
-wget https://maven.atlassian.com/content/repositories/atlassian-public/com/atlassian/bamboo/atlassian-bamboo-elastic-image/${imageVer}/atlassian-bamboo-elastic-image-${imageVer}.zip
+wget https://maven.atlassian.com/content/repositories/atlassian-public/com/atlassian/bamboo/atlassian-bamboo-elastic-image/${BAMBOO_AGENT_VERSION}/atlassian-bamboo-elastic-image-${BAMBOO_AGENT_VERSION}.zip
 sudo mkdir -p /opt/bamboo-elastic-agent
-sudo unzip -o atlassian-bamboo-elastic-image-${imageVer}.zip -d /opt/bamboo-elastic-agent
+sudo unzip -o atlassian-bamboo-elastic-image-${BAMBOO_AGENT_VERSION}.zip -d /opt/bamboo-elastic-agent
 sudo chown -R bamboo /opt/bamboo-elastic-agent
 sudo chmod u+r+w /opt/bamboo-elastic-agent
 sudo chmod 755 /opt/bamboo-elastic-agent/*
@@ -62,7 +67,7 @@ sudo su -c "timeout $AGENT_TIMEOUT /opt/bamboo-elastic-agent/bin/bamboo-elastic-
 echo -e "\n\n[Bamboo Agent installation script]: Finalizing ...\n\n"
 # Welcome screen
 sudo cp /opt/bamboo-elastic-agent/etc/motd /etc/motd
-echo bamboo-agent-${imageVer}  | sudo tee -a /etc/motd
+echo bamboo-agent-${BAMBOO_AGENT_VERSION}  | sudo tee -a /etc/motd
 sudo rm -f /root/firstlogin /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_dsa_key.pub /etc/ssh/ssh_host_key /etc/ssh/ssh_host_key.pub /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub /root/.ssh/authorized_keys
 sudo touch /root/firstrun
 sudo /opt/bamboo-elastic-agent/bin/prepareInstanceForSaving.sh
